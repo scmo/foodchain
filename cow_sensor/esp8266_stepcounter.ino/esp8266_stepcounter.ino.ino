@@ -1,11 +1,13 @@
 #include <ESP8266WiFi.h>
-#include <WiFiClient.h>
+#include <ESP8266HTTPClient.h>
 
 bool lastVal=false;
 unsigned long lastMeasurement = millis();
 int steps = 0;
 
 int LED_GREEN = D2;
+
+HTTPClient http;
 
 void setup() {
   Serial.begin(115200);
@@ -19,8 +21,8 @@ void setup() {
   digitalWrite(LED_GREEN, LOW);
 
   // Wifi
-  //WiFi.begin("WLAN-MOBILE", "6340baar");
-  WiFi.begin("funky", "kjqf7200");
+  WiFi.begin("WLAN-MOBILE", "6340baar");
+  //WiFi.begin("funky", "kjqf7200");
 }
 
 
@@ -37,9 +39,25 @@ void loop() {
   }
   lastVal = curVal;
 
-  // Check WiFi
+  // Get Status of WiFi
   bool connected = (WiFi.status() == WL_CONNECTED);
   digitalWrite(LED_GREEN, connected);
 
-  delay(10);
+  // If we have connection and we counted some steps, POST
+  if (connected && (steps > 0)) {
+    Serial.println("Posting...");
+
+    http.begin("http://54.86.191.244/");
+    http.addHeader("Content-Type", "application/json");
+    int ret = http.POST("{\"steps\": " + String(steps) + "}");
+    
+    if (ret < 0) {
+      Serial.println(http.errorToString(ret).c_str());
+    } else {
+      Serial.println("Successful posted steps...");
+      steps = 0;  
+    }
+    http.end();
+  }
+
 }
