@@ -1,7 +1,9 @@
 package ch.foodchain.meattracking.model;
 
 import ch.foodchain.meattracking.helpers.StepTypes;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -28,7 +30,8 @@ public class MovementMeasurement {
     private StepTypes stepTypes;
 
     @Column(name = "time_end")
-    private LocalDateTime timeEnd;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private Date timeEnd;
 
     @Column(name = "duration_in_seconds")
     private long durationInSeconds;
@@ -75,11 +78,11 @@ public class MovementMeasurement {
         this.durationInSeconds = durationInSeconds;
     }
 
-    public LocalDateTime getTimeEnd() {
+    public Date getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(LocalDateTime timeEnd) {
+    public void setTimeEnd(Date timeEnd) {
         this.timeEnd = timeEnd;
     }
 }

@@ -7,6 +7,7 @@ import ch.foodchain.meattracking.transfer.MovementMeasurementDto;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Service
 public class MovementMeasurementService {
@@ -22,7 +23,7 @@ public class MovementMeasurementService {
         mm.setDurationInSeconds(mmDto.getDuration());
         mm.setNrOfSteps(mmDto.getSteps());
         mm.setStepTypes(mmDto.getSteptype());
-        mm.setTimeEnd(LocalDateTime.now());
+        mm.setTimeEnd(new Date());
 
         return mm;
 
