@@ -1,6 +1,5 @@
 package ch.foodchain.meattracking.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -31,7 +30,6 @@ import javax.validation.constraints.NotNull;
         @Column(name = "description")
         private String description;
 
-        @JsonFormat(pattern="yyyy-MM-dd")
         @Column(name = "birthdate")
         private Date birthdate;
 

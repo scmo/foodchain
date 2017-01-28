@@ -7,7 +7,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -30,7 +29,6 @@ public class MovementMeasurement {
     private StepTypes stepTypes;
 
     @Column(name = "time_end")
-    @JsonFormat(pattern="yyyy-MM-dd")
     private Date timeEnd;
 
     @Column(name = "duration_in_seconds")
