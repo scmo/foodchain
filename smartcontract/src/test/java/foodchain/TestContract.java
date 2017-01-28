@@ -3,6 +3,7 @@ package foodchain;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.web3j.abi.datatypes.Address;
 import org.web3j.crypto.CipherException;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
@@ -21,9 +22,18 @@ public class TestContract {
     }
 
     @Test
-    public void testDeploy() throws ExecutionException, InterruptedException, IOException, CipherException {
+    public void testDeploy() throws Exception {
         SmartContract sm = new SmartContract();
         String adr = sm.deploy("farmX");
         System.out.println(adr);
+        Address a = sm.lookupName("farmX");
+        System.out.println(adr);
+    }
+
+    @Test
+    public void testLookup() throws Exception {
+        SmartContract sm = new SmartContract();
+        Address a = sm.lookupName("farmX");
+        System.out.println(a);
     }
 }
