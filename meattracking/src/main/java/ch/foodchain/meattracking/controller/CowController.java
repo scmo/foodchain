@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.ws.rs.Produces;
 import java.util.List;
 
-
+@CrossOrigin
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/cow")
@@ -44,12 +44,24 @@ public class CowController {
     }
 
 
+    @RequestMapping(value = "/{animalId}/", method = RequestMethod.GET)
+    @ResponseBody
+    @Produces("application/json")
+    public ResponseEntity<Cow> getCow(@PathVariable(value="animalId") String animalId) {
+        Cow c = cowRepository.findByAnimalId(animalId);
+        if (c == null) {
+            return ResponseEntity.<MovementMeasurement>status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(c);
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     @ResponseBody
     @Produces("application/json")
     public List<Cow> getCows() {
         return cowRepository.findAll();
     }
+
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     @ResponseBody
@@ -59,6 +71,7 @@ public class CowController {
         Cow result = cowRepository.save(cow);
         return result;
     }
+
 
     @RequestMapping(value = "/{animalId}/movement-measurement", method = RequestMethod.POST)
     @ResponseBody

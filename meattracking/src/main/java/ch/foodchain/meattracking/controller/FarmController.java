@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.ws.rs.Produces;
 import java.util.List;
 
+@CrossOrigin
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/farm")
