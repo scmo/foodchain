@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 
 @Entity
@@ -24,6 +26,9 @@ public class MovementMeasurement {
 
     @Column(name = "step_types")
     private StepTypes stepTypes;
+
+    @Column(name = "time_end")
+    private LocalDateTime timeEnd;
 
     @Column(name = "duration_in_seconds")
     private long durationInSeconds;
@@ -68,5 +73,13 @@ public class MovementMeasurement {
 
     public void setDurationInSeconds(long durationInSeconds) {
         this.durationInSeconds = durationInSeconds;
+    }
+
+    public LocalDateTime getTimeEnd() {
+        return timeEnd;
+    }
+
+    public void setTimeEnd(LocalDateTime timeEnd) {
+        this.timeEnd = timeEnd;
     }
 }
