@@ -22,7 +22,8 @@ int LED_WHITE          = D1;
 int LED_RED            = D6;
 int PIN_READ           = D4;
 String COW_ID          = "elsa-384756";
-String SERVER_ENDPOINT = "http://192.168.43.197:8090/cow/" + COW_ID + "/movement-measurement";
+String SERVER_ENDPOINT = "http://192.168.43.166:8090/cow/" + COW_ID + "/movement-measurement";
+//String SERVER_ENDPOINT = "http://192.168.43.197:8090/cow/" + COW_ID + "/movement-measurement";
 //String SERVER_ENDPOINT = "http://54.86.191.244/cow/" + COW_ID + "/movement-measurement";
 String WIFI_SSID       = "leyla";
 String WIFI_PASSWORD   = "woahalaaha1879";
@@ -57,7 +58,6 @@ void loop() {
 
   // Read for steps
   bool curVal = !digitalRead(PIN_READ);
-  Serial.println(curVal);
   bool stepEncountered = false;
 
   // Rising, edge: Remember time
@@ -103,7 +103,7 @@ void loop() {
     http.addHeader("Content-Type", "application/json");
     int ret = http.POST(payload);
 
-    if (ret < 0) {
+    if (ret < 0 || ret >= 400) {
       Serial.println(http.errorToString(ret).c_str());
       digitalWrite(LED_RED, HIGH);
       delay(300);
