@@ -24,6 +24,8 @@ public class FarmDto {
     @NotNull
     private String image;
 
+    private String website;
+
     public String getName() {
         return name;
     }
@@ -70,5 +72,13 @@ public class FarmDto {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 }

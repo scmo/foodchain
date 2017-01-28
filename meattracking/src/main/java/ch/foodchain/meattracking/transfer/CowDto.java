@@ -1,6 +1,7 @@
 package ch.foodchain.meattracking.transfer;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 public class CowDto {
 
@@ -18,6 +19,8 @@ public class CowDto {
 
     @NotNull
     private String breed;
+
+    private Date birthdate;
 
     public String getName() {
         return name;
