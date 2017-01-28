@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Cows</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <h3>All Cows</h3>
+
+  <ion-list>
+    <button ion-item *ngFor="let cow of cows" (click)="cowTapped($event, cow)">
+      <!--<ion-icon [name]="item.icon" item-left></ion-icon>-->
+      {{cow.name}}
+      <div class="item-note" item-right>
+        <ion-badge>22 steps...</ion-badge>
+      </div>
+    </button>
+  </ion-list>
+
+  <button ion-button secondary menuToggle>Toggle Menu</button>
+</ion-content>
