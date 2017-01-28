@@ -4,8 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
-    @Entity
+@Entity
     @Table(name = "cow")
     public class Cow {
 
@@ -32,6 +33,7 @@ import javax.persistence.*;
         private Date birthdate;
 
         @ManyToOne()
+        @NotNull
         private Farm farm;
 
         @OneToMany(mappedBy = "cow")
