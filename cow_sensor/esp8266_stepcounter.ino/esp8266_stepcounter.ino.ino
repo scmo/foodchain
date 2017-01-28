@@ -21,8 +21,8 @@ int LED_GREEN          = D2;
 int LED_WHITE          = D1;
 int LED_RED            = D6;
 int PIN_READ           = D4;
-String COW_ID          = "olga";
-String SERVER_ENDPOINT = "http://192.168.43.166:8090/cow/" + COW_ID + "/movement-measurement";
+String COW_ID          = "olga";  
+String SERVER_ENDPOINT = "http://foodchain.ch/cow/" + COW_ID + "/movement-measurement";
 //String SERVER_ENDPOINT = "http://192.168.43.197:8090/cow/" + COW_ID + "/movement-measurement";
 //String SERVER_ENDPOINT = "http://54.86.191.244/cow/" + COW_ID + "/movement-measurement";
 String WIFI_SSID       = "leyla";
@@ -90,7 +90,7 @@ void loop() {
   // If we have connection and we counted some steps, POST and reset
   if (connected && (steps > 0)) {
     // Type of step. If we have 1 step from this iteration: inside
-    int steptype = (steps== 1 && stepEncountered) ? 1 : 0;
+    int steptype = (steps== 1 && stepEncountered) ? 0 : 1;
     
     String payload = "{\"steps\":" + String(steps) + "," + 
       "\"duration\":" + String((millis() - lastPostTimestamp)/1000) + "," +
