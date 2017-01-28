@@ -1,0 +1,11 @@
+apply plugin: 'java'
+
+repositories {
+    maven {url "http://dl.bintray.com/ethereum/maven"}
+    mavenLocal()
+    mavenCentral()
+}
+dependencies {
+    compile("org.ethereum:ethereumj-core:1.4.+")
+    testCompile 'junit:junit:4.12'
+}
