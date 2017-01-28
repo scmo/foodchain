@@ -13,13 +13,13 @@ unsigned long lastOpenTimestamp = millis();
 unsigned long lastPostTimestamp = millis();
 
 // Counting of steps
-int steps = 0;
+int steps      = 0;
 
-int MIN_STEP_TIME = 500;    // min time that steps are apart
-int MIN_OPEN_TIME = 10;     // min time that the switch must be open for a step
-int LED_GREEN = D2;
+int MIN_STEP_TIME      = 500;    // min time that steps are apart
+int MIN_OPEN_TIME      = 10;     // min time that the switch must be open for a step
+int LED_GREEN          = D2;
 String SERVER_ENDPOINT = "http://54.86.191.244/";
-String COW_ID = "ELSA1337";
+String COW_ID          = "ELSA1337";
 
 HTTPClient http;
 
@@ -41,8 +41,13 @@ void setup() {
 
 
 void loop() {
+  // Get Status of WiFi
+  bool connected = (WiFi.status() == WL_CONNECTED);
+  digitalWrite(LED_GREEN, connected);
+
   // Read for steps
   bool curVal = !digitalRead(D3);
+  bool stepEncountered = false;
 
   // Rising, edge: Remember time
   if (curVal == 1 && lastVal == 0) {
@@ -60,21 +65,24 @@ void loop() {
     // We have a step
     lastStepTimestamp = millis();
     steps++;
+    stepEncountered = true;
     Serial.println("Step registred. Now have " + String(steps) + " steps");
   }
   lastVal = curVal;
 
-  // Get Status of WiFi
-  bool connected = (WiFi.status() == WL_CONNECTED);
-  digitalWrite(LED_GREEN, connected);
 
   // If we have connection and we counted some steps, POST and reset
   if (connected && (steps > 0)) {
+    // Type of step. If we have 1 step from this iteration: inside
+    int steptype = (steps== 1 && stepEncountered) ? 1 : 0;
+    
     String payload = "{\"steps\":" + String(steps) + "," + 
-      "\"duration\":" + String((millis() - lastPostTimestamp)/1000) + "" +
+      "\"duration\":" + String((millis() - lastPostTimestamp)/1000) + "," +
+      "\"steptype\":" + String(steptype) +
       "}";
     Serial.println("Posting..." + payload);
 
+    // Make POST request
     http.begin(SERVER_ENDPOINT);
     http.addHeader("Content-Type", "application/json");
     int ret = http.POST(payload);
