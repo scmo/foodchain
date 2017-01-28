@@ -1,5 +1,7 @@
 package ch.foodchain.meattracking.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Blob;
 import java.util.List;
@@ -29,6 +31,9 @@ public class Farm {
 
     @Column(name = "address")
     private String address;
+
+    @Column(name = "website")
+    private String website;
 
     @OneToMany(mappedBy = "farm")
     private List<Cow> cows;
@@ -63,6 +68,7 @@ public class Farm {
         this.description = description;
     }
 
+    @JsonIgnore
     public List<Cow> getCows() {
         return cows;
     }
@@ -93,5 +99,13 @@ public class Farm {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 }

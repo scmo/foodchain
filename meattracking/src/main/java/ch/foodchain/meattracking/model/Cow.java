@@ -1,10 +1,13 @@
 package ch.foodchain.meattracking.model;
 
+
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
-    @Entity
+@Entity
     @Table(name = "cow")
     public class Cow {
 
@@ -27,7 +30,11 @@ import javax.persistence.*;
         @Column(name = "description")
         private String description;
 
+        @Column(name = "birthdate")
+        private Date birthdate;
+
         @ManyToOne()
+        @NotNull
         private Farm farm;
 
         @OneToMany(mappedBy = "cow")
@@ -95,6 +102,14 @@ import javax.persistence.*;
 
         public void setBreed(String breed) {
             this.breed = breed;
+        }
+
+        public Date getBirthdate() {
+            return birthdate;
+        }
+
+        public void setBirthdate(Date birthdate) {
+            this.birthdate = birthdate;
         }
     }
 
