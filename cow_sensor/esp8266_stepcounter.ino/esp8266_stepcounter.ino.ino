@@ -13,13 +13,17 @@ unsigned long lastOpenTimestamp = millis();
 unsigned long lastPostTimestamp = millis();
 
 // Counting of steps
-int steps = 0;
+int steps      = 0;
 
-int MIN_STEP_TIME = 500;    // min time that steps are apart
-int MIN_OPEN_TIME = 10;     // min time that the switch must be open for a step
-int LED_GREEN = D2;
-String SERVER_ENDPOINT = "http://54.86.191.244/";
-String COW_ID = "ELSA1337";
+int MIN_STEP_TIME      = 500;    // min time that steps are apart
+int MIN_OPEN_TIME      = 10;     // min time that the switch must be open for a step
+int LED_GREEN          = D2;
+int LED_WHITE          = D1;
+String COW_ID          = "elsa-384756";
+String SERVER_ENDPOINT = "http://192.168.43.197:8090/cow/" + COW_ID + "/movement-measurement";
+String WIFI_SSID       = "leyla";
+String WIFI_PASSWORD   = "woahalaaha1879";
+
 
 HTTPClient http;
 
@@ -33,16 +37,22 @@ void setup() {
   // LEDs
   pinMode(LED_GREEN, OUTPUT);
   digitalWrite(LED_GREEN, LOW);
+  pinMode(LED_WHITE, OUTPUT);
+  digitalWrite(LED_WHITE, LOW);
 
   // Wifi
-  //WiFi.begin("WLAN-MOBILE", "6340baar");
-  WiFi.begin("funky", "kjqf7200");
+  WiFi.begin(WIFI_SSID.c_str(), WIFI_PASSWORD.c_str());
 }
 
 
 void loop() {
+  // Get Status of WiFi
+  bool connected = (WiFi.status() == WL_CONNECTED);
+  digitalWrite(LED_GREEN, connected);
+
   // Read for steps
   bool curVal = !digitalRead(D3);
+  bool stepEncountered = false;
 
   // Rising, edge: Remember time
   if (curVal == 1 && lastVal == 0) {
@@ -60,27 +70,36 @@ void loop() {
     // We have a step
     lastStepTimestamp = millis();
     steps++;
+    stepEncountered = true;
     Serial.println("Step registred. Now have " + String(steps) + " steps");
+    digitalWrite(LED_WHITE, HIGH);
   }
   lastVal = curVal;
 
-  // Get Status of WiFi
-  bool connected = (WiFi.status() == WL_CONNECTED);
-  digitalWrite(LED_GREEN, connected);
+  // Turn off step led after some time
+  if ((millis() - lastStepTimestamp) > 500) {
+    digitalWrite(LED_WHITE, LOW);
+  }
 
   // If we have connection and we counted some steps, POST and reset
   if (connected && (steps > 0)) {
+    // Type of step. If we have 1 step from this iteration: inside
+    int steptype = (steps== 1 && stepEncountered) ? 1 : 0;
+    
     String payload = "{\"steps\":" + String(steps) + "," + 
-      "\"duration\":" + String((millis() - lastPostTimestamp)/1000) + "" +
+      "\"duration\":" + String((millis() - lastPostTimestamp)/1000) + "," +
+      "\"steptype\":" + String(steptype) +
       "}";
     Serial.println("Posting..." + payload);
 
+    // Make POST request
     http.begin(SERVER_ENDPOINT);
     http.addHeader("Content-Type", "application/json");
     int ret = http.POST(payload);
 
     if (ret < 0) {
       Serial.println(http.errorToString(ret).c_str());
+      delay(2000);
     } else {
       Serial.println("Successful posted steps...");
       steps = 0;
