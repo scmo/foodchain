@@ -3,7 +3,7 @@ package foodchain;
 /**
  * Created by draft on 28.01.17.
  */
-public class CLI {
+public class CLI1 {
 
     public static final String HOME ="/home/draft/git/foodchain/smartcontract/";
 

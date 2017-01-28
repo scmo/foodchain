@@ -16,8 +16,23 @@
 
  pragma solidity ^0.4.4;
 
+
  contract FoodChain {
     //the data is aggregated on a daily basis
+
+    //var node = namehash("foodchain.test")
+    //bytes32 constant ensRoot =  0x9e07b8794cc8e118f2e0dd2c168f3b38d4e21491a3bbef6557b7fb94976fc770;
+    //contract address of resolver
+
+    //0xeeee111e8c9d89b04a066ff6f9d1864da1fbf7c3
+    FIFSRegistrar constant registrar = FIFSRegistrar(0x5aa32dc46e33b9de99271d03b27d8a44baeb5e53);
+
+    //address af public ENS
+    //AbstractENS ens = AbstractENS(0x112234455c3a32fd11230c42e7bccd4a84e02010);
+
+
+    //ens.setOwner(namehash("foodchain.test"), fifsregistrar.address, {from:eth.accounts[0]});
+    //loadScript("/home/draft/git/foodchain/ensutils.js");
 
     struct Cow
     {
@@ -37,15 +52,15 @@
 
     address initialOwner;
     address currentOwner;
-    function FoodChain() {
+    function FoodChain(string name) {
         initialOwner = msg.sender;
         currentOwner = msg.sender;
+        registrar.register(sha3(name), this);
     }
 
     /* Any remaining funds should be sent back to the sender */
     function done() {
         if (msg.sender == currentOwner) {
-            //TODO: unregister
             suicide(msg.sender);
         }
     }
@@ -116,4 +131,23 @@
     function cowPaymentAmount(bytes32 cowId, address payTo) constant returns (uint256) {
         return cows[cowId].balanceTotal[payTo];
     }
- }
+
+    function addr(bytes32 node) returns (address) {
+      return this;
+    }
+}
+
+contract FIFSRegistrar {
+    function register(bytes32 subnode, address owner);
+    function lookup(string name) constant returns (address);
+}
+
+contract AbstractENS {
+    function owner(bytes32 node) constant returns(address);
+    function resolver(bytes32 node) constant returns(address);
+    function ttl(bytes32 node) constant returns(uint64);
+    function setOwner(bytes32 node, address owner);
+    function setSubnodeOwner(bytes32 node, bytes32 label, address owner);
+    function setResolver(bytes32 node, address resolver);
+    function setTTL(bytes32 node, uint64 ttl);
+}
