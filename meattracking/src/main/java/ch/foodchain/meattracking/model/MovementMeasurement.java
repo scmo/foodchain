@@ -4,6 +4,7 @@ import ch.foodchain.meattracking.helpers.StepTypes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -15,6 +16,7 @@ public class MovementMeasurement {
     private Integer id;
 
     @ManyToOne()
+    @NotNull
     private Cow cow;
 
     @Column(name = "nr_of_steps")

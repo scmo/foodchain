@@ -8,8 +8,12 @@ import ch.foodchain.meattracking.service.CowService;
 import ch.foodchain.meattracking.service.MovementMeasurementService;
 import ch.foodchain.meattracking.transfer.CowDto;
 import ch.foodchain.meattracking.transfer.MovementMeasurementDto;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +26,7 @@ import java.util.List;
 @EnableAutoConfiguration
 @RequestMapping("/cow")
 public class CowController {
+    private static Logger LOG = Logger.getLogger(CowController.class);
 
     private CowService cowCervice;
     private MovementMeasurementService movementService;
@@ -58,12 +63,15 @@ public class CowController {
     @RequestMapping(value = "/{animalId}/movement-measurement", method = RequestMethod.POST)
     @ResponseBody
     @Produces("application/json")
-    public MovementMeasurement crateMovementMeasurement(@PathVariable(value="animalId") String animalId, @Validated @RequestBody MovementMeasurementDto input) {
-        System.out.println(animalId);
+    public ResponseEntity<MovementMeasurement> crateMovementMeasurement(@PathVariable(value="animalId") String animalId, @Validated @RequestBody MovementMeasurementDto input) {
         Cow c = cowRepository.findByAnimalId(animalId);
+        if (c == null) {
+            LOG.error("Bad request: cow of measurement not found (" + animalId + ")");
+            return ResponseEntity.<MovementMeasurement>status(HttpStatus.BAD_REQUEST).body(null);
+        }
         MovementMeasurement mm = movementService.convertToEntity(input, c);
         MovementMeasurement result = movementRepository.save(mm);
-        return result;
+        return ResponseEntity.ok(result);
     }
 
 
