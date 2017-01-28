@@ -19,8 +19,11 @@ int MIN_STEP_TIME      = 500;    // min time that steps are apart
 int MIN_OPEN_TIME      = 10;     // min time that the switch must be open for a step
 int LED_GREEN          = D2;
 int LED_WHITE          = D1;
+int LED_RED            = D6;
+int PIN_READ           = D4;
 String COW_ID          = "elsa-384756";
 String SERVER_ENDPOINT = "http://192.168.43.197:8090/cow/" + COW_ID + "/movement-measurement";
+//String SERVER_ENDPOINT = "http://54.86.191.244/cow/" + COW_ID + "/movement-measurement";
 String WIFI_SSID       = "leyla";
 String WIFI_PASSWORD   = "woahalaaha1879";
 
@@ -32,13 +35,15 @@ void setup() {
   Serial.println("");
 
   // Sensors
-  pinMode(D3, INPUT);
+  pinMode(PIN_READ, INPUT);
 
   // LEDs
   pinMode(LED_GREEN, OUTPUT);
   digitalWrite(LED_GREEN, LOW);
   pinMode(LED_WHITE, OUTPUT);
   digitalWrite(LED_WHITE, LOW);
+  pinMode(LED_RED, OUTPUT);
+  digitalWrite(LED_RED, LOW);
 
   // Wifi
   WiFi.begin(WIFI_SSID.c_str(), WIFI_PASSWORD.c_str());
@@ -51,7 +56,8 @@ void loop() {
   digitalWrite(LED_GREEN, connected);
 
   // Read for steps
-  bool curVal = !digitalRead(D3);
+  bool curVal = !digitalRead(PIN_READ);
+  Serial.println(curVal);
   bool stepEncountered = false;
 
   // Rising, edge: Remember time
@@ -72,12 +78,12 @@ void loop() {
     steps++;
     stepEncountered = true;
     Serial.println("Step registred. Now have " + String(steps) + " steps");
-    digitalWrite(LED_WHITE, HIGH);
+
   }
   lastVal = curVal;
 
   // Turn off step led after some time
-  if ((millis() - lastStepTimestamp) > 500) {
+  if ((millis() - lastPostTimestamp) > 500) {
     digitalWrite(LED_WHITE, LOW);
   }
 
@@ -99,11 +105,15 @@ void loop() {
 
     if (ret < 0) {
       Serial.println(http.errorToString(ret).c_str());
+      digitalWrite(LED_RED, HIGH);
+      delay(300);
+      digitalWrite(LED_RED, LOW);
       delay(2000);
     } else {
       Serial.println("Successful posted steps...");
       steps = 0;
       lastPostTimestamp = millis();
+      digitalWrite(LED_WHITE, HIGH);
     }
     http.end();
   }
