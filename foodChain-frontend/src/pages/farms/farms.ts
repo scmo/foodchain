@@ -1,10 +1,8 @@
-import { Component } from '@angular/core';
-
-import { NavController } from 'ionic-angular';
-import {CowService} from "../../providers/cow-service";
-import {CowComponent} from "./detail/cow";
+import {Component} from "@angular/core";
+import {NavController} from "ionic-angular";
 import {FarmService} from "../../providers/farm-service";
 import {FarmComponent} from "./detail/farm";
+
 
 @Component({
   selector: 'page-farms',
@@ -19,7 +17,6 @@ export class FarmsComponent {
   }
 
   loadFarms(){
-    console.log("load Farms");
     this.farmService.load()
       .then(data => {
         this.farms = data;

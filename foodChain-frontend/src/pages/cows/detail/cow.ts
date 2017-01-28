@@ -1,11 +1,13 @@
-import {Component, ViewChild} from '@angular/core';
-
-import {NavController, NavParams} from 'ionic-angular';
-import { Chart } from 'chart.js';
+import {Component, ViewChild, ElementRef} from "@angular/core";
+import {NavController, NavParams} from "ionic-angular";
+import {Chart} from "chart.js";
+import {CowService} from "../../../providers/cow-service";
+import {MomentModule} from "angular2-moment/module";
 
 @Component({
   selector: 'page-cow',
   templateUrl: 'cow.html',
+  providers: [CowService]
 })
 export class CowComponent {
 
@@ -17,18 +19,33 @@ export class CowComponent {
   @ViewChild('lineCanvas') lineCanvas;
   lineChart: any;
 
-  @ViewChild('outsideGraph') outsideCanvas;
-  outsideGraph: any;
+  @ViewChild('doughnutCanvas') doughnutCanvas;
+  doughnutChart: any;
+
+  @ViewChild('map') mapElement: ElementRef;
+  map: any;
 
   public hideStepStats:boolean;
   public hideOutsideStats:boolean;
+  public hideFarmer:boolean;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.cow = navParams.get('cow');
+  constructor(public navCtrl: NavController, public navParams: NavParams, public cowService:CowService) {
 
-    this.hideStepStats = true;
-    this.hideOutsideStats = true;
+    this.cow = {};
+    this.hideStepStats = false;
+    this.hideOutsideStats = false;
+    this.hideFarmer = false;
+    this.loadCow(navParams.get('cowId'));
+  }
+
+  loadCow(id){
+    this.cowService.loadCow(id).then(data => {
+      this.cow = data;
+      this.getOutdoorChart();
+      this.getLineChart();
+      this.loadMap();
+    });
   }
 
 
@@ -40,13 +57,58 @@ export class CowComponent {
     this.hideOutsideStats = !this.hideOutsideStats;
   }
 
-  ionViewDidLoad() {
+  toggleFarmer(event) {
+    this.hideFarmer = !this.hideFarmer;
+  }
+
+  getOutdoorChart(){
+
+    let outdoor = 0;
+    let indoor = 0;
+
+    for(let i = 0; i < this.cow.movementMeasurements.length; i++){
+      if(this.cow.movementMeasurements[i].stepTypes == 'OUTSIDE') {
+        outdoor += this.cow.movementMeasurements[i].nrOfSteps;
+      }else{
+        indoor += this.cow.movementMeasurements[i].nrOfSteps;
+      }
+    }
+
+    this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
+      type: 'doughnut',
+      data: {
+        labels: ["Indoor", "Outdoor"],
+        datasets: [{
+          label: '# of Votes',
+          data: [indoor, outdoor],
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          hoverBackgroundColor: [
+            "#36A2EB",
+            "#FFCE56"
+          ]
+        }]
+      }
+
+    });
+  }
+
+  getLineChart() {
+    let data = [];
+    let labels = [];
+
+    for(let i = 0; i < this.cow.movementMeasurements.length; i++){
+      data.push(this.cow.movementMeasurements[i].nrOfSteps)
+      labels.push(this.cow.movementMeasurements[i].timeEnd)
+    }
 
     this.lineChart = new Chart(this.lineCanvas.nativeElement, {
 
       type: 'line',
       data: {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        labels: labels,
         datasets: [
           {
             label: "Steps of " + this.cow.name,
@@ -67,15 +129,55 @@ export class CowComponent {
             pointHoverBorderWidth: 2,
             pointRadius: 1,
             pointHitRadius: 10,
-            data: [65, 59, 80, 81, 56, 55, 40],
+            data: data,
             spanGaps: false,
           }
         ]
       }
 
     });
+  }
+  ionViewDidLoad() {
+
+  }
+
+  loadMap(){
+    let latLng = new google.maps.LatLng(this.cow.farm.latitude, this.cow.farm.longitude);
+    let mapOptions = {
+      center: latLng,
+      zoom: 12,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+    this.addMarker();
+  }
+
+  addMarker(){
+
+    let marker = new google.maps.Marker({
+      map: this.map,
+      animation: google.maps.Animation.DROP,
+      position: this.map.getCenter()
+    });
+
+    let content = "<h4>Information!</h4>";
 
 
+
+    this.addInfoWindow(marker, content);
+
+  }
+
+  addInfoWindow(marker, content){
+
+    let infoWindow = new google.maps.InfoWindow({
+      content: content
+    });
+
+    google.maps.event.addListener(marker, 'click', () => {
+      infoWindow.open(this.map, marker);
+    });
   }
 
 }

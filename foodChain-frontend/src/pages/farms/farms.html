@@ -12,13 +12,8 @@
 
   <ion-list>
     <button ion-item *ngFor="let farm of farms" (click)="farmTapped($event, farm)">
-      <!--<ion-icon [name]="item.icon" item-left></ion-icon>-->
-      {{farm.username}}
-      <div class="item-note" item-right>
-        {{farm.username}}
-      </div>
+      {{farm.name}}
     </button>
   </ion-list>
 
-  <button ion-button secondary menuToggle>Toggle Menu</button>
 </ion-content>

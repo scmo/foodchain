@@ -16,8 +16,11 @@
 // automatically applied to the <body> element in the app.
 
 ion-nav ion-content{
-  background-image: url('/assets/background.jpg');
+  //background-image: url('/assets/background.jpg');
+  background: url('../assets/background.jpg');
 }
+;
+
 
 ion-card-header {
   color: white;
@@ -27,6 +30,9 @@ ion-card-header.card-header{
   color: white;
 }
 
+body{
+  color: white;
+}
 
 
 

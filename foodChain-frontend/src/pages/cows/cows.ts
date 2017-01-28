@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-
-import { NavController } from 'ionic-angular';
+import {Component} from "@angular/core";
+import {NavController} from "ionic-angular";
 import {CowService} from "../../providers/cow-service";
 import {CowComponent} from "./detail/cow";
 
@@ -25,8 +24,9 @@ export class CowsComponent {
   }
 
   cowTapped(event, cow) {
+    console.log(cow);
     this.navCtrl.push(CowComponent, {
-      cow: cow
+      cowId: cow.animalId
     });
   }
 }
