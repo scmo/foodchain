@@ -28,9 +28,10 @@ VALUES
 
 INSERT INTO cow_event (timestamp, cow_id, event)
 VALUES
-  ('2016-10-11', 1, 'Geburt'),
-  ('2016-10-11', 1, 'Trennung von Mutterkuh'),
-  ('2016-11-19', 1, 'Schlachtung Bell'),
-  ('2016-10-11', 2, 'Geburt'),
-  ('2016-10-11', 2, 'Verkauft an Hof Müller'),
-  ('2016-11-19', 2, 'Schlachtung Metzger Meier');
+  ('2015-10-11', 1, 'Elsa is born'),
+  ('2015-11-11', 1, 'Veterinary visits Elsa - all good'),
+  ('2015-11-11', 1, 'Elsa is moved to the farm of Family Muller'),
+  ('2017-01-19', 1, 'Elsa is slaughtered '),
+  ('2016-01-18', 2, 'Olga is born'),
+  ('2016-01-25', 2, 'Olga is moved to a feedlot Pumpcow Inc.'),
+  ('2017-01-25', 2, 'Olga is slaughtered');
