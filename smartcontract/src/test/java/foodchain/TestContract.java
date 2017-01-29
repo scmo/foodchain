@@ -38,6 +38,23 @@ public class TestContract {
     }
 
     @Test
+    public void testDeployName() throws Exception {
+        SmartContract sm = new SmartContract();
+        String adr = sm.deploy("farmX");
+        System.out.println(adr);
+        Address a = sm.lookupName("farmX");
+        System.out.println("Add: "+a);
+        sm.update("farmX", "cow1", "farm1" ,1, 2 , 3);
+        Cow cow = sm.cow("farmX", "cow1");
+        Assert.assertEquals("farm1", cow.farmAddress());
+        Assert.assertEquals(0, cow.status());
+        Assert.assertEquals(1, cow.stepCounter());
+        Assert.assertEquals(2, cow.outsideTimeInSeconds());
+        Assert.assertEquals(3, cow.insideTimeInSeconds());
+
+    }
+
+    @Test
     public void testConvert() {
         String test = "cow1";
         byte[] tmp = new byte[32];
