@@ -6,11 +6,14 @@ import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Bytes32;
+import org.web3j.abi.datatypes.generated.Uint32;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.Hash;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.utils.Numeric;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -42,22 +45,37 @@ public class SmartContract {
     }
 
     public void update(String contractName, String cowId,  String farmAddress, int stepCounter, int outsideTemp, int insideTemp) throws Exception {
-        Credentials credentials = WalletUtils.loadCredentials("123456", "/home/draft/.ethereum/testnet/keystore/"+ACCOUNT1);
         Address adr = lookupName(contractName);
-        FoodChain contract = FoodChain.load(adr.toString(), web3j, credentials, ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT);
-        //contract.update()
-        //contract.update()
+        updateWithAddress(adr.toString(), cowId, farmAddress, stepCounter, outsideTemp, insideTemp);
     }
 
-    public Cow cow(String contractName, Bytes32 cowId) throws Exception {
+    public void updateWithAddress(String adr, String cowId,  String farmAddress, int stepCounter, int outsideTemp, int insideTemp) throws Exception {
         Credentials credentials = WalletUtils.loadCredentials("123456", "/home/draft/.ethereum/testnet/keystore/"+ACCOUNT1);
-        Address adr = lookupName(contractName);
-        FoodChain contract = FoodChain.load(adr.toString(), web3j, credentials, ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT);
+        FoodChain contract = FoodChain.load(adr, web3j, credentials, ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT);
+        //contract.update()
+        byte[] tmp1 = new byte[32];
+        System.arraycopy(cowId.getBytes(), 0, tmp1, 0, cowId.getBytes().length);
 
-        List<Type> tmp = contract.cow(cowId).get();
-        Iterator<Type> it = tmp.iterator();
-        Cow cow = new Cow((int)it.next().getValue(), (int)it.next().getValue(),
-                (int)it.next().getValue(), (int)it.next().getValue(), (String)it.next().getValue());
+        byte[] tmp2 = new byte[32];
+        System.arraycopy(farmAddress.getBytes(), 0, tmp2, 0, farmAddress.getBytes().length);
+
+        contract.update(new Bytes32(tmp1), new Bytes32(tmp2), new Uint32(BigInteger.valueOf(stepCounter)), new Uint32(BigInteger.valueOf(outsideTemp)), new Uint32(BigInteger.valueOf(insideTemp))).get();
+    }
+
+    public Cow cow(String contractName, String cowId) throws Exception {
+        Address adr = lookupName(contractName);
+        return cowWithAddress(adr.toString(), cowId);
+    }
+
+    public Cow cowWithAddress(String adr, String cowId) throws Exception {
+        Credentials credentials = WalletUtils.loadCredentials("123456", "/home/draft/.ethereum/testnet/keystore/"+ACCOUNT1);
+        FoodChain contract = FoodChain.load(adr, web3j, credentials, ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT);
+        byte[] tmp = new byte[32];
+        System.arraycopy(cowId.getBytes(), 0, tmp, 0, cowId.getBytes().length);
+        List<Type> tmpList = contract.cow(new Bytes32(tmp)).get();
+        Iterator<Type> it = tmpList.iterator();
+        Cow cow = new Cow(((BigInteger)it.next().getValue()).intValue(), ((BigInteger)it.next().getValue()).intValue(),
+                ((BigInteger)it.next().getValue()).intValue(), ((BigInteger)it.next().getValue()).intValue(), new String((byte[])it.next().getValue()).replaceAll("\0", ""));
         return cow;
     }
 
