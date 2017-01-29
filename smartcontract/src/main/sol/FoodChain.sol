@@ -96,9 +96,9 @@
             uint32 outsideTimeInSeconds, uint32 insideTimeInSeconds) {
         if (msg.sender == initialOwner) {
             cows[cowId].farmAddress = farmAddress;
-            cows[cowId].stepCounter = stepCounter;
-            cows[cowId].outsideTimeInSeconds = outsideTimeInSeconds;
-            cows[cowId].insideTimeInSeconds = insideTimeInSeconds;
+            cows[cowId].stepCounter += stepCounter;
+            cows[cowId].outsideTimeInSeconds += outsideTimeInSeconds;
+            cows[cowId].insideTimeInSeconds += insideTimeInSeconds;
         }
     }
 
