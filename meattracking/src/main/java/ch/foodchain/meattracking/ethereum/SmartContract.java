@@ -1,4 +1,4 @@
-package foodchain;
+package ch.foodchain.meattracking.ethereum;
 
 import org.web3j.abi.Contract;
 import org.web3j.abi.ManagedTransaction;
@@ -9,11 +9,9 @@ import org.web3j.abi.datatypes.generated.Bytes32;
 import org.web3j.abi.datatypes.generated.Uint32;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.Hash;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.utils.Numeric;
 
 import java.io.IOException;
 import java.math.BigInteger;

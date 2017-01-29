@@ -24,7 +24,7 @@
     //bytes32 constant ensRoot =  0x9e07b8794cc8e118f2e0dd2c168f3b38d4e21491a3bbef6557b7fb94976fc770;
     //contract address of resolver
 
-    //FIFSRegistrar constant registrar = FIFSRegistrar(0x300d4c6fdc1094a0218184f73108d72d9c64ba0d);
+    FIFSRegistrar constant registrar = FIFSRegistrar(0x2bc4c198325853db29293b6a62f36a62f7cbcf45);
 
     //address af public ENS
     //AbstractENS ens = AbstractENS(0x112234455c3a32fd11230c42e7bccd4a84e02010);
@@ -54,7 +54,7 @@
     function FoodChain(string name) {
         initialOwner = msg.sender;
         currentOwner = msg.sender;
-        //registrar.register(sha3(name), this);
+        registrar.register(sha3(name), this);
     }
 
     /* Any remaining funds should be sent back to the sender */
@@ -96,9 +96,9 @@
             uint32 outsideTimeInSeconds, uint32 insideTimeInSeconds) {
         if (msg.sender == initialOwner) {
             cows[cowId].farmAddress = farmAddress;
-            cows[cowId].stepCounter = stepCounter;
-            cows[cowId].outsideTimeInSeconds = outsideTimeInSeconds;
-            cows[cowId].insideTimeInSeconds = insideTimeInSeconds;
+            cows[cowId].stepCounter += stepCounter;
+            cows[cowId].outsideTimeInSeconds += outsideTimeInSeconds;
+            cows[cowId].insideTimeInSeconds += insideTimeInSeconds;
         }
     }
 
