@@ -13,4 +13,6 @@ gradle  -PmainClass=foodchain.CLI2 execute
 #loadScript
 
 #personal.unlockAccount(eth.accounts[0], "123456", 999999);
-#loaddScript("/home/draft/git/foodchain/ensutils.js");
+
+#loadScript("/home/draft/git/foodchain/ensutils.js");
+#ens.setResolver(namehash('blablabla.test'), publicResolver.address, {from: eth.accounts[0]});

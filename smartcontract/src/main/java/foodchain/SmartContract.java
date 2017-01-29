@@ -40,7 +40,7 @@ public class SmartContract {
 
     public Address lookupName(String contractName) throws Exception {
         Credentials credentials = WalletUtils.loadCredentials("123456", "/home/draft/.ethereum/testnet/keystore/"+ACCOUNT1);
-        FIFSRegistrar fifs = FIFSRegistrar.load("0x80ee913e8d8aa3ce1468d40a0292112bceb75fc4", web3j, credentials, ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT);
+        FIFSRegistrar fifs = FIFSRegistrar.load("0x2bc4c198325853db29293b6a62f36a62f7cbcf45", web3j, credentials, ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT);
         return fifs.lookup(new Utf8String(contractName)).get();
     }
 
