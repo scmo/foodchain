@@ -84,6 +84,10 @@ public class CowController {
         }
         MovementMeasurement mm = movementService.convertToEntity(input, c);
         MovementMeasurement result = movementRepository.save(mm);
+
+        // TODO: Save measuremnt in blockchain. For hack, after every call, for productino, once per day
+
+
         return ResponseEntity.ok(result);
     }
 
