@@ -1,15 +1,18 @@
 package ch.foodchain.meattracking.controller;
 
 import ch.foodchain.meattracking.model.Cow;
+import ch.foodchain.meattracking.model.CowEvent;
 import ch.foodchain.meattracking.model.MovementMeasurement;
+import ch.foodchain.meattracking.repository.CowEventRepository;
 import ch.foodchain.meattracking.repository.CowRepository;
 import ch.foodchain.meattracking.repository.MovementMeasurementRepository;
+import ch.foodchain.meattracking.service.CowEventService;
 import ch.foodchain.meattracking.service.CowService;
 import ch.foodchain.meattracking.service.MovementMeasurementService;
 import ch.foodchain.meattracking.transfer.CowDto;
+import ch.foodchain.meattracking.transfer.CowEventDto;
 import ch.foodchain.meattracking.transfer.MovementMeasurementDto;
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -28,19 +31,26 @@ import java.util.List;
 public class CowController {
     private static Logger LOG = Logger.getLogger(CowController.class);
 
-    private CowService cowCervice;
-    private MovementMeasurementService movementService;
-    private CowRepository cowRepository;
     private MovementMeasurementRepository movementRepository;
+    private MovementMeasurementService movementService;
+    private CowEventService eventService;
+    private CowEventRepository eventRepository;
+    private CowService cowCervice;
+    private CowRepository cowRepository;
+
 
 
     @Autowired
     public CowController(CowRepository cowRepository, CowService cowCervice,
-                         MovementMeasurementService movementService, MovementMeasurementRepository movementRepository){
+                         MovementMeasurementService movementService, MovementMeasurementRepository movementRepository,
+                         CowEventService eventService, CowEventRepository eventRepository){
         this.cowRepository = cowRepository;
         this.cowCervice = cowCervice;
         this.movementService = movementService;
         this.movementRepository = movementRepository;
+        this.eventService = eventService;
+        this.eventRepository = eventRepository;
+
     }
 
 
@@ -73,6 +83,25 @@ public class CowController {
     }
 
 
+    @RequestMapping(value = "/{animalId}/event", method = RequestMethod.POST)
+    @ResponseBody
+    @Produces("application/json")
+    public ResponseEntity<CowEvent> createcowEvent(@PathVariable(value="animalId") String animalId, @Validated @RequestBody CowEventDto input) {
+        Cow c = cowRepository.findByAnimalId(animalId);
+        if (c == null) {
+            LOG.error("Bad request: cow of measurement not found (" + animalId + ")");
+            return ResponseEntity.<MovementMeasurement>status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        CowEvent ce = eventService.convertToEntity(input, c);
+        CowEvent result = eventRepository.save(ce);
+
+        // TODO: Save measuremnt in blockchain. For hack, after every call, for productino, once per day
+
+
+        return ResponseEntity.ok(result);
+    }
+
+
     @RequestMapping(value = "/{animalId}/movement-measurement", method = RequestMethod.POST)
     @ResponseBody
     @Produces("application/json")
@@ -90,7 +119,6 @@ public class CowController {
 
         return ResponseEntity.ok(result);
     }
-
 
 
 

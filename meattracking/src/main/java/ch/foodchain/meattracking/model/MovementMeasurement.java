@@ -1,9 +1,7 @@
 package ch.foodchain.meattracking.model;
 
 import ch.foodchain.meattracking.helpers.StepTypes;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,7 +14,7 @@ public class MovementMeasurement {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @ManyToOne()
     @NotNull
@@ -35,11 +33,11 @@ public class MovementMeasurement {
     private long durationInSeconds;
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
