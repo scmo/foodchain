@@ -1,5 +1,6 @@
 package ch.foodchain.meattracking.ethereum;
 
+import org.springframework.stereotype.Service;
 import org.web3j.abi.Contract;
 import org.web3j.abi.ManagedTransaction;
 import org.web3j.abi.datatypes.Address;
@@ -19,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+@Service
 public class SmartContract {
 
     final private static Web3j web3j;
