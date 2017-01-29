@@ -7,6 +7,7 @@ import ch.foodchain.meattracking.repository.CowEventRepository;
 import ch.foodchain.meattracking.repository.CowRepository;
 import ch.foodchain.meattracking.repository.MovementMeasurementRepository;
 import ch.foodchain.meattracking.service.CowEventService;
+import ch.foodchain.meattracking.service.BlockchainService;
 import ch.foodchain.meattracking.service.CowService;
 import ch.foodchain.meattracking.service.MovementMeasurementService;
 import ch.foodchain.meattracking.transfer.CowDto;
@@ -37,7 +38,8 @@ public class CowController {
     private CowEventRepository eventRepository;
     private CowService cowCervice;
     private CowRepository cowRepository;
-
+    private MovementMeasurementRepository movementRepository;
+    private BlockchainService blockchainService;
 
 
     @Autowired
@@ -114,8 +116,8 @@ public class CowController {
         MovementMeasurement mm = movementService.convertToEntity(input, c);
         MovementMeasurement result = movementRepository.save(mm);
 
-        // TODO: Save measuremnt in blockchain. For hack, after every call, for productino, once per day
-
+        // TODO: Save measuremnt in blockchain. For hack: after every call, for production: once per day
+        blockchainService.saveCowMovementToChain(c, mm);
 
         return ResponseEntity.ok(result);
     }
