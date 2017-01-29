@@ -32,7 +32,6 @@ import java.util.List;
 public class CowController {
     private static Logger LOG = Logger.getLogger(CowController.class);
 
-    private MovementMeasurementRepository movementRepository;
     private MovementMeasurementService movementService;
     private CowEventService eventService;
     private CowEventRepository eventRepository;
@@ -45,13 +44,14 @@ public class CowController {
     @Autowired
     public CowController(CowRepository cowRepository, CowService cowCervice,
                          MovementMeasurementService movementService, MovementMeasurementRepository movementRepository,
-                         CowEventService eventService, CowEventRepository eventRepository){
+                         CowEventService eventService, CowEventRepository eventRepository, BlockchainService blockchainService){
         this.cowRepository = cowRepository;
         this.cowCervice = cowCervice;
         this.movementService = movementService;
         this.movementRepository = movementRepository;
         this.eventService = eventService;
         this.eventRepository = eventRepository;
+        this.blockchainService = blockchainService;
 
     }
 
