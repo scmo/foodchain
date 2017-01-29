@@ -40,6 +40,10 @@ import javax.validation.constraints.NotNull;
         @OneToMany(mappedBy = "cow")
         private List<MovementMeasurement> movementMeasurements;
 
+
+        @OneToMany(mappedBy = "cow")
+        private List<CowEvents> events;
+
         public Integer getId() {
             return id;
         }
@@ -111,5 +115,13 @@ import javax.validation.constraints.NotNull;
         public void setBirthdate(Date birthdate) {
             this.birthdate = birthdate;
         }
-    }
+
+        public List<CowEvents> getEvents() {
+            return events;
+        }
+
+        public void setEvents(List<CowEvents> events) {
+            this.events = events;
+        }
+}
 

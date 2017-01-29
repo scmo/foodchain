@@ -25,3 +25,12 @@ VALUES
 	(2, 276, 1, 431, '2017-01-27'),
 	(2, 63, 0, 214, '2017-01-28');
 
+
+INSERT INTO cow_event (timestamp, cow_id, event)
+VALUES
+  ('2016-10-11', 1, 'Geburt'),
+  ('2016-10-11', 1, 'Trennung von Mutterkuh'),
+  ('2016-11-19', 1, 'Schlachtung Bell'),
+  ('2016-10-11', 2, 'Geburt'),
+  ('2016-10-11', 2, 'Verkauft an Hof Müller'),
+  ('2016-11-19', 2, 'Schlachtung Metzger Meier');
