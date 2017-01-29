@@ -20,11 +20,20 @@ export class CowsComponent {
     this.cowService.load()
       .then(data => {
         this.cows = data;
+        this.sumStep();
       });
   }
 
+  sumStep(){
+    for(let i = 0; i < this.cows.length; i++){
+      this.cows[i].steps = 0
+      for(let y = 0; y < this.cows[i].movementMeasurements.length; y++){
+        this.cows[i].steps += this.cows[i].movementMeasurements[y].nrOfSteps
+      }
+    }
+  }
+
   cowTapped(event, cow) {
-    console.log(cow);
     this.navCtrl.push(CowComponent, {
       cowId: cow.animalId
     });

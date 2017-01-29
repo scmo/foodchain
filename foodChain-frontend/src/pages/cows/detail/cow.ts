@@ -2,7 +2,7 @@ import {Component, ViewChild, ElementRef} from "@angular/core";
 import {NavController, NavParams} from "ionic-angular";
 import {Chart} from "chart.js";
 import {CowService} from "../../../providers/cow-service";
-import {MomentModule} from "angular2-moment/module";
+import * as moment from "moment";
 
 @Component({
   selector: 'page-cow',
@@ -28,6 +28,7 @@ export class CowComponent {
   public hideStepStats:boolean;
   public hideOutsideStats:boolean;
   public hideFarmer:boolean;
+  public hideHistory:boolean;
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public cowService:CowService) {
@@ -59,6 +60,10 @@ export class CowComponent {
 
   toggleFarmer(event) {
     this.hideFarmer = !this.hideFarmer;
+  }
+
+  toggleHistory(event) {
+    this.hideHistory = !this.hideHistory;
   }
 
   getOutdoorChart(){
@@ -101,7 +106,7 @@ export class CowComponent {
 
     for(let i = 0; i < this.cow.movementMeasurements.length; i++){
       data.push(this.cow.movementMeasurements[i].nrOfSteps)
-      labels.push(this.cow.movementMeasurements[i].timeEnd)
+      labels.push(moment(this.cow.movementMeasurements[i].timeEnd).format('MMM Do YYYY, hA'))
     }
 
     this.lineChart = new Chart(this.lineCanvas.nativeElement, {
@@ -137,9 +142,7 @@ export class CowComponent {
 
     });
   }
-  ionViewDidLoad() {
 
-  }
 
   loadMap(){
     let latLng = new google.maps.LatLng(this.cow.farm.latitude, this.cow.farm.longitude);

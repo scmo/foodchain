@@ -35,7 +35,7 @@
   <ion-card>
     <ion-card-header (click)="toggleShowStepStats($event)">
       <ion-item>
-        <ion-icon name='walk' item-left style="color: #d03e84"></ion-icon>
+        <ion-icon name='walk' item-left></ion-icon>
         Movements
         <ion-icon name='arrow-down' item-right [hidden]="!hideStepStats"></ion-icon>
         <ion-icon name='arrow-up' item-right [hidden]="hideStepStats"></ion-icon>
@@ -49,7 +49,7 @@
   <ion-card>
     <ion-card-header (click)="toggleOutsideStats($event)">
       <ion-item>
-        <ion-icon name='partly-sunny' item-left style="color: #d03e84"></ion-icon>
+        <ion-icon name='partly-sunny' item-left></ion-icon>
         Fresh Air
         <ion-icon name='arrow-down' [hidden]="!hideOutsideStats" item-right></ion-icon>
         <ion-icon name='arrow-up' [hidden]="hideOutsideStats" item-right></ion-icon>
@@ -63,14 +63,14 @@
   <ion-card>
     <ion-card-header (click)="toggleFarmer($event)">
       <ion-item>
-        <ion-icon name='home' item-left style="color: #d03e84"></ion-icon>
+        <ion-icon name='home' item-left></ion-icon>
         Farmer
-        <ion-icon name='arrow-down' [hidden]="!hideOutsideStats" item-right></ion-icon>
-        <ion-icon name='arrow-up' [hidden]="hideOutsideStats" item-right></ion-icon>
+        <ion-icon name='arrow-down' [hidden]="!hideFarmer" item-right></ion-icon>
+        <ion-icon name='arrow-up' [hidden]="hideFarmer" item-right></ion-icon>
       </ion-item>
     </ion-card-header>
-    <ion-card-content [hidden]="hideOutsideStats" *ngIf="cow.farm">
 
+    <ion-card-content [hidden]="hideFarmer" *ngIf="cow.farm">
       <ion-card>
         <img src="{{cow.farm.picture}}"/>
         <ion-card-content>
@@ -93,8 +93,35 @@
         </ion-item>
       </ion-card>
 
-      <ion-card #map id="map"></ion-card>
+
     </ion-card-content>
   </ion-card>
+  <ion-card #map id="map"></ion-card>
 
+  <ion-card>
+    <ion-card-header (click)="toggleHistory($event)">
+      <ion-item>
+        <ion-icon name='archive' item-left></ion-icon>
+        History
+        <ion-icon name='arrow-down' [hidden]="!hideHistory" item-right></ion-icon>
+        <ion-icon name='arrow-up' [hidden]="hideHistory" item-right></ion-icon>
+      </ion-item>
+    </ion-card-header>
+    <ion-card-content [hidden]="hideHistory">
+      <ion-grid>
+        <ion-row style="font-weight: bold">
+          <ion-col width-40>Date</ion-col>
+          <ion-col width-60>Event</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col width-40>11.10.2013</ion-col>
+          <ion-col width-60>Born</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col width-40>4.01.2015</ion-col>
+          <ion-col width-60>Changed farmer</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
