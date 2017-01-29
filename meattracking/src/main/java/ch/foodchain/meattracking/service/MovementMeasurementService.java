@@ -6,7 +6,6 @@ import ch.foodchain.meattracking.repository.CowRepository;
 import ch.foodchain.meattracking.transfer.MovementMeasurementDto;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
